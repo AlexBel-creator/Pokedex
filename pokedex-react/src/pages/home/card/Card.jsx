@@ -8,6 +8,10 @@ export default function Card({ card }) {
   const [itemPokemon, setItemPokemon] = useState({});  
   const [especiePokemon, setEspeciePokemon] = useState({});
   const [evoluciones, setEvoluciones] = useState([]);
+
+  console.log(evoluciones)
+
+
   
   useEffect(() => {
     const dataPokemon = async() => {
@@ -36,8 +40,6 @@ export default function Card({ card }) {
       const response = await axios.get(`${URL_POKEMON}/${id}`);
       return response?.data?.sprites?.other["official-artwork"]?.front_default;
     }
-
-
 
     if (especiePokemon?.url_especie) {
 
@@ -75,8 +77,7 @@ export default function Card({ card }) {
           }
         }  
 
-        console.log(arrayEvoluciones);
-        //setEvoluciones(arrayEvoluciones);
+        setEvoluciones(arrayEvoluciones);
       };
 
       obtenirEvoluciones();
