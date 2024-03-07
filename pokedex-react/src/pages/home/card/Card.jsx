@@ -45,25 +45,39 @@ export default function Card({ card }) {
         const arrayEvoluciones = [];
         const URL = especiePokemon?.url_especie?.url.split("/");
         const api = await axios.get(`${URL_EVOLUCIONES}/${URL[6]}`);
-
         const URL2 = api?.data?.chain?.species?.url?.split("/");
-        console.log(URL2)
-
         const img1 = await getPokemonImage(URL2[6]);
-
         arrayEvoluciones.push({
           img: img1,
           name: api?.data?.chain?.species?.name,
         });
 
+        if (api?.data?.chain?.evolves_to?.length !== 0) {
+          const DATA2 = api?.data?.chain?.evolves_to[0]?.species;
+          const ID = DATA2?.url?.split("/");
+          const img2 = await getPokemonImage(ID[6]);
 
+          arrayEvoluciones.push({
+            img: img2,
+            name: DATA2?.name,
+          });
 
+          if (api?.data?.chain.evolves_to[0].evolves_to.length !== 0) {
+            const DATA3 =
+              api?.data?.chain?.evolves_to[0]?.evolves_to[0]?.species;
+            const ID = DATA3?.url?.split("/");
+            const img3 = await getPokemonImage(ID[6]);
 
+            arrayEvoluciones.push({
+              img: img3,
+              name: DATA3?.name,
+            });
+          }
+        }  
 
-
+        console.log(arrayEvoluciones);
+        //setEvoluciones(arrayEvoluciones);
       };
-
-
 
       obtenirEvoluciones();
     }
