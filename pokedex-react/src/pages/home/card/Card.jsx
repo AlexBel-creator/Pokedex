@@ -62,8 +62,8 @@ export default function Card({ card }) {
               {itemPokemon?.types?.map((ti, index) => {
                 return (
                   <h6
-                    key={index}
-                    className={`color-${ti.type.name}  ${css.color_type} `}
+                  key={index}
+                  className={`color-${ti.type.name}  ${css.color_type} `}
                   >
                     {" "}
                     {ti.type.name}{" "}
