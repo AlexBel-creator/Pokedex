@@ -1,31 +1,32 @@
-import React, { useEffect } from 'react'
-import css from './layout.module.scss'
-import Header from '../header/Header'
-import axios from 'axios'
-import { URL_POKEMON } from '../../../api/apiRest'
+import React, { useEffect, useState } from 'react';
+import css from './layout.module.scss';
+import Header from '../header/Header';
+import axios from 'axios';
+import { URL_POKEMON } from '../../../api/apiRest';
+import Card from "../card/Card";
 
 export default function LayoutHome() {
+  const [arrayPokemon, setArrayPokemon] = useState([]);
 
-
-// Axios 
   useEffect(() => {
-
-
     const api = async () => {
-
       const apiPoke = await axios.get(`${URL_POKEMON}`)
-      console.log(apiPoke.data);
-    }
 
+      setArrayPokemon(apiPoke.data.results);
+    };
 
-    api()
-
+    api();
   }, [])
 
 
   return (
     <div className={css.layout} >
       <Header/>
+      <div>
+        {arrayPokemon.map((card,index) => {
+          return <Card key={index} card={card} />;
+        })}
+      </div>
     </div>
   )
 }
