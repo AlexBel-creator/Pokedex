@@ -8,10 +8,7 @@ export default function Card({ card }) {
   const [itemPokemon, setItemPokemon] = useState({});  
   const [especiePokemon, setEspeciePokemon] = useState({});
   const [evoluciones, setEvoluciones] = useState([]);
-
-  console.log(evoluciones)
-
-
+  
   
   useEffect(() => {
     const dataPokemon = async() => {
@@ -134,6 +131,16 @@ export default function Card({ card }) {
               })}
             </div>
 
+            <div className={css.div_evolucion}>
+                {evoluciones.map((evo, index) => {
+                  return (
+                    <div key={index} className={css.item_evo}>
+                      <img src={evo.img} alt="evo" className={css.img} />
+                      <h6> {evo.name} </h6>
+                    </div>
+                  );
+                })}
+            </div>
 
         </div>
     </div>
