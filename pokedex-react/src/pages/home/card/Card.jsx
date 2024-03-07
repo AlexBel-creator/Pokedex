@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import css from './card.module.scss';
 import axios from 'axios';
-import { URL_ESPECIES, URL_POKEMON } from '../../../api/apiRest';
+import { URL_ESPECIES, URL_POKEMON,URL_EVOLUCIONES, } from '../../../api/apiRest';
 
 
 export default function Card({ card }) {
   const [itemPokemon, setItemPokemon] = useState({});  
-  const [especiePokemon, setEspeciePokemon] = useState({});  
-
+  const [especiePokemon, setEspeciePokemon] = useState({});
+  const [evoluciones, setEvoluciones] = useState([]);
+  
   useEffect(() => {
     const dataPokemon = async() => {
         const api = await axios.get(`${URL_POKEMON}/${card.name}`);
@@ -15,23 +16,69 @@ export default function Card({ card }) {
         setItemPokemon(api.data);
     };
     dataPokemon();
-  }, []);
-
+  }, [card]);
 
   useEffect(() => {
-    const dataEspecie = async() => {
-        const URL = card.url.split("/"); 
+    const dataEspecie = async () => {
+      const URL = card.url.split("/");
 
-        const api = await axios.get(`${URL_ESPECIES}/${URL[6]}`);
-        console.log(api);
-        setEspeciePokemon(api.data);
+      const api = await axios.get(`${URL_ESPECIES}/${URL[6]}`);
+      setEspeciePokemon({
+        url_especie: api?.data?.evolution_chain,
+        data: api?.data,
+      });
     };
     dataEspecie();
-  }, []);
+  }, [card]);
 
-  console.log(itemPokemon);
+  useEffect(() => {
+    async function getPokemonImage(id) {
+      const response = await axios.get(`${URL_POKEMON}/${id}`);
+      return response?.data?.sprites?.other["official-artwork"]?.front_default;
+    }
 
 
+
+    if (especiePokemon?.url_especie) {
+
+      const obtenirEvoluciones = async () => {
+        const arrayEvoluciones = [];
+        const URL = especiePokemon?.url_especie?.url.split("/");
+        const api = await axios.get(`${URL_EVOLUCIONES}/${URL[6]}`);
+
+        const URL2 = api?.data?.chain?.species?.url?.split("/");
+        console.log(URL2)
+
+        const img1 = await getPokemonImage(URL2[6]);
+
+        arrayEvoluciones.push({
+          img: img1,
+          name: api?.data?.chain?.species?.name,
+        });
+
+
+
+
+
+
+      };
+
+
+
+      obtenirEvoluciones();
+    }
+  }, [especiePokemon]);
+
+
+
+
+
+  let pokeId = itemPokemon?.id?.toString();
+  if (pokeId?.length === 1) {
+    pokeId = "00" + pokeId;
+  } else if (pokeId?.length === 2) {
+    pokeId = "0" + pokeId;
+  }
   return (
     <div className={css.card} >
         <img 
@@ -39,12 +86,12 @@ export default function Card({ card }) {
             src={itemPokemon?.sprites?.other["official-artwork"]?.front_default} 
             alt="pokemon"
         />
-        <div className= { `bg-${especiePokemon?.color?.name}  ${css.sub_card}` } >
-            <strong className={css.id_card} > 011 </strong>
-            <strong className={css.name_card} > name </strong>
-            <h4 className={css.hauteur_poke} > 10cm </h4>
-            <h4 className={css.poids_poke} > poids </h4>
-            <h4 className={css.habitat_poke} > habitat </h4>
+        <div className= { `bg-${especiePokemon?.data?.color?.name}  ${css.sub_card}` } >
+            <strong className={css.id_card} > {pokeId} </strong>
+            <strong className={css.name_card}> {itemPokemon.name} </strong>
+            <h4 className={css.hauteur_poke} > Hauteur : {itemPokemon.height}0 Cm </h4>
+            <h4 className={css.poids_poke} > Poids : {itemPokemon.weight} Kg </h4>
+            <h4 className={css.habitat_poke} > Habitat : {especiePokemon?.data?.habitat?.name} </h4>
 
             <div className={css.div_stats}>
               {itemPokemon?.stats?.map((sta, index) => {
