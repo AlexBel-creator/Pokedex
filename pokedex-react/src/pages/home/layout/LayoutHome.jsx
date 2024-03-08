@@ -51,8 +51,8 @@ export default function LayoutHome() {
 
   const obtenirSearch = (e) => {
 
-    const texto = e.toLowerCase()
-    setSearch(texto)
+    const text = e.toLowerCase()
+    setSearch(text)
     setXpage(1)
   }
 
