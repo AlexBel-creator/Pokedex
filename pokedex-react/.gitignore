@@ -1,3 +1,6 @@
+# Api
+src/api/apiRest.js
+
 # Logs
 logs
 *.log
