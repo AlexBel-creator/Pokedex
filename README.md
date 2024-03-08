@@ -5,6 +5,8 @@
 
 It's a peer programming project 👥
 
+The `apiRest.js` file, which includes calls to the [PokeAPI](https://pokeapi.co/docs/v2), doesn't contain any sensitive data. It's designed to fetch public Pokémon data, so there's no need to add this file to `.gitignore`.
+
 
 ## Features
 
