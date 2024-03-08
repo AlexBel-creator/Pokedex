@@ -7,18 +7,20 @@ import { URL_POKEMON } from '../../../api/apiRest';
 import Card from "../card/Card";
 
 export default function LayoutHome() {
+  // State pour stocker la data
   const [arrayPokemon, setArrayPokemon] = useState([]);
   const [globalPokemon, setGlobalPokemon] = useState([]);
   const [xpage, setXpage] = useState(1);
   const [search, setSearch] = useState('');
 
 
-
+  // Recup' la data dès que xpage ou search change
   useEffect(() => {
+    // Call API et avor ts les poke
     const api = async () => {
 
       const limit = 15;
-      const xp = (xpage - 1) * limit;
+      const xp = (xpage - 1) * limit; // calcul de pagination
       const apiPoke = await axios.get(
         `${URL_POKEMON}?offset=${xp}&limit=${limit}`
       );
@@ -42,18 +44,18 @@ export default function LayoutHome() {
     setGlobalPokemon(results);
   };
 
-
+  // Filtre les Poke lors de la recherche
   const filterPokemons = search?.length > 0 
   ? globalPokemon?.filter(pokemon =>  pokemon?.name?.includes(search))
   : arrayPokemon
 
 
-
+  // obtenir la valeur recherchée et maj les states
   const obtenirSearch = (e) => {
 
     const text = e.toLowerCase()
     setSearch(text)
-    setXpage(1)
+    setXpage(1) //Réinit à la 1er page lors d'une nouvelle recherche
   }
 
   return (
@@ -94,7 +96,6 @@ export default function LayoutHome() {
           </span>
         </div>
       </section>
-
       <div className={css.card_content}>
         {filterPokemons.map((card, index) => {
           return <Card key={index} card={card} />;

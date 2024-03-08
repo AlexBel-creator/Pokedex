@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import css from './card.module.scss';
-import axios from 'axios';
+import axios from 'axios'; // requêtes
 import { URL_ESPECIES, URL_POKEMON,URL_EVOLUCIONES, } from '../../../api/apiRest';
 
 
 export default function Card({ card }) {
+  // State pour stocker les infos
   const [itemPokemon, setItemPokemon] = useState({});  
   const [especiePokemon, setEspeciePokemon] = useState({});
   const [evoluciones, setEvoluciones] = useState([]);
   
-  
+  // Récup' les infoss du Pokémon dès que la carte est load
   useEffect(() => {
     const dataPokemon = async() => {
         const api = await axios.get(`${URL_POKEMON}/${card.name}`);
@@ -23,7 +24,8 @@ export default function Card({ card }) {
     const dataEspecie = async () => {
       const URL = card.url.split("/");
 
-      const api = await axios.get(`${URL_ESPECIES}/${URL[6]}`);
+      const api = await axios.get(`${URL_ESPECIES}/${URL[6]}`); // REQUETE GET 
+      // MAJ STATE
       setEspeciePokemon({
         url_especie: api?.data?.evolution_chain,
         data: api?.data,
@@ -32,8 +34,10 @@ export default function Card({ card }) {
     dataEspecie();
   }, [card]);
 
+  // Récup' les images des évos du Pokémon
   useEffect(() => {
     async function getPokemonImage(id) {
+      // GET pour Recup l'img d'un Pokémon avec l'ID
       const response = await axios.get(`${URL_POKEMON}/${id}`);
       return response?.data?.sprites?.other["official-artwork"]?.front_default;
     }
@@ -84,7 +88,7 @@ export default function Card({ card }) {
 
 
 
-
+  // ID du Pokémon pour l'affichage
   let pokeId = itemPokemon?.id?.toString();
   if (pokeId?.length === 1) {
     pokeId = "00" + pokeId;
